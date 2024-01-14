@@ -14,7 +14,7 @@ const Book = ({book, onShelfChange}) => {
       onShelfChange(book, event.target.value);
     }
   }
-  return (<div className="book">
+  return (<div className="book" data-shelf={book.shelf !== 'none'}>
     <div className="book-top">
       <div
         className="book-cover"
