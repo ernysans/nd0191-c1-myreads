@@ -2,7 +2,14 @@ import BooksGrid from "./BooksGrid";
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 
-const ListBooks = () => {
+/**
+ * Search Books Component
+ * @param books
+ * @param onShelfChange
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const ListBooks = ({books, onShelfChange}) => {
   return (<div className="list-books">
     <div className="list-books-title">
       <h1>MyReads</h1>
@@ -12,19 +19,19 @@ const ListBooks = () => {
         <div className="bookshelf">
           <h2 className="bookshelf-title">Currently Reading</h2>
           <div className="bookshelf-books">
-            <BooksGrid/>
+            <BooksGrid books={books.filter((book) => book.shelf === "currentlyReading")} onShelfChange={onShelfChange}/>
           </div>
         </div>
         <div className="bookshelf">
           <h2 className="bookshelf-title">Want to Read</h2>
           <div className="bookshelf-books">
-            <BooksGrid/>
+            <BooksGrid books={books.filter((book) => book.shelf === "wantToRead")} onShelfChange={onShelfChange}/>
           </div>
         </div>
         <div className="bookshelf">
           <h2 className="bookshelf-title">Read</h2>
           <div className="bookshelf-books">
-            <BooksGrid/>
+            <BooksGrid books={books.filter((book) => book.shelf === "read")} onShelfChange={onShelfChange}/>
           </div>
         </div>
       </div>
@@ -37,6 +44,7 @@ const ListBooks = () => {
 
 ListBooks.propTypes = {
   books: PropTypes.array.isRequired,
+  onShelfChange: PropTypes.func.isRequired,
 };
 
 export default ListBooks;

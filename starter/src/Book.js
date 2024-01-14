@@ -1,6 +1,19 @@
 import PropTypes from "prop-types";
 
-const Book = ({book}) => {
+/**
+ * Book Component
+ * @param book
+ * @param onShelfChange
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const Book = ({book, onShelfChange}) => {
+  const handleChange = (event) => {
+    event.preventDefault();
+    if (onShelfChange) {
+      onShelfChange(book, event.target.value);
+    }
+  }
   return (<div className="book">
     <div className="book-top">
       <div
@@ -8,30 +21,37 @@ const Book = ({book}) => {
         style={{
           width: 128,
           height: 193,
-          backgroundImage:
-            "url(\"http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api\")",
+          backgroundImage: `url(${book.imageLinks.thumbnail})`,
         }}
       ></div>
       <div className="book-shelf-changer">
-        <select>
+        <select onChange={handleChange} value={book.shelf}>
           <option value="none" disabled>
-            Move to...
+            {book.shelf === 'none' && (
+              "Add to..."
+            )}
+            {book.shelf !== 'none' && (
+              "Move to..."
+            )}
           </option>
           <option value="currentlyReading">
             Currently Reading
           </option>
           <option value="wantToRead">Want to Read</option>
           <option value="read">Read</option>
-          <option value="none">None</option>
+          {book.shelf !== 'none' && (
+            <option value="none">Remove</option>
+          )}
         </select>
       </div>
     </div>
-    <div className="book-title">To Kill a Mockingbird</div>
-    <div className="book-authors">Harper Lee</div>
+    <div className="book-title">{book.title}</div>
+    {book.authors && book.authors.length > 0 && (<div className="book-authors">{book.authors.join(', ')}</div>)}
   </div>);
 }
 
 Book.propTypes = {
   book: PropTypes.object.isRequired,
+  onShelfChange: PropTypes.func.isRequired,
 };
 export default Book;
