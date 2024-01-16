@@ -35,10 +35,8 @@ build
 build/*/*
 build/Release
 dist/*
-#src/**.js
 functions/**.js
 functions/lib/*
-#lib/*/*
 
 # Dependency directories
 node_modules
