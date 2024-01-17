@@ -21,27 +21,24 @@ const Book = ({book, onShelfChange}) => {
         style={{
           width: 128,
           height: 193,
-          backgroundImage: `url(${book.imageLinks.thumbnail})`,
+          backgroundImage: `url(${book.imageLinks && book.imageLinks.thumbnail ? book.imageLinks.thumbnail : 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=128&height=193&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Ym9va3xlbnwwfHwwfHx8MA%3D%3D'})`,
         }}
       ></div>
       <div className="book-shelf-changer">
         <select onChange={handleChange} value={book.shelf}>
-          <option value="none" disabled>
-            {book.shelf === 'none' && (
-              "Add to..."
-            )}
-            {book.shelf !== 'none' && (
-              "Move to..."
-            )}
+          <option disabled>
+            {book.shelf === 'none' && ("Add to...")}
+            {book.shelf !== 'none' && ("Move to...")}
           </option>
           <option value="currentlyReading">
             Currently Reading
           </option>
           <option value="wantToRead">Want to Read</option>
           <option value="read">Read</option>
-          {book.shelf !== 'none' && (
-            <option value="none">Remove</option>
-          )}
+          <option value="none">
+            {book.shelf !== 'none' && ("Remove")}
+            {book.shelf === 'none' && ("None")}
+          </option>
         </select>
       </div>
     </div>
@@ -51,7 +48,6 @@ const Book = ({book, onShelfChange}) => {
 }
 
 Book.propTypes = {
-  book: PropTypes.object.isRequired,
-  onShelfChange: PropTypes.func.isRequired,
+  book: PropTypes.object.isRequired, onShelfChange: PropTypes.func.isRequired,
 };
 export default Book;

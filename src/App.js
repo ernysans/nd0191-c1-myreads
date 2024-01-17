@@ -20,7 +20,15 @@ const App = () => {
   const handleShelfChange = (book, shelf) => {
     const updateShelf = async () => {
       await BooksAPI.update(book, shelf);
-      await getAllBooks();
+      // await getAllBooks();
+      // Update Books State
+      const updatedBooks = books.filter((b) => b.id !== book.id);
+      setBooks([
+        ...updatedBooks, {
+          ...book,
+          shelf: shelf,
+        },
+      ]);
     };
     updateShelf();
   }

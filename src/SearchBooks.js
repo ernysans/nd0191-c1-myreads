@@ -1,8 +1,9 @@
 import BooksGrid from "./BooksGrid";
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import * as BooksAPI from "./BooksAPI";
+import debounce from 'lodash.debounce';
 
 /**
  * Search Books Component
@@ -14,20 +15,36 @@ import * as BooksAPI from "./BooksAPI";
 const SearchBooks = ({books, onShelfChange}) => {
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState("");
-  /**
-   * Perform Search
-   * @param value
-   * @returns {Promise<void>}
-   */
-  const onSearch = async (value) => {
-    setQuery(value);
+  const search = async (value) => {
+    if (!value || value === "") {
+      setSearchResults([]);
+      return;
+    }
     let res = await BooksAPI.search(value.toLowerCase(), 10);
     if (res && res.length > 0) {
       setSearchResults(res);
     } else {
       setSearchResults([]);
     }
+    return searchResults;
   };
+
+  /**
+   * Debounce Search
+   */
+  const debouncedSearch = useRef(debounce(async (nextValue) => await search(nextValue), 1000)).current;
+
+  /**
+   * Handle Search Query Change
+   * @param value
+   */
+  const handleChange = useCallback(
+    value => {
+      setQuery(value);
+      debouncedSearch(value);
+    },
+    [debouncedSearch]
+  )
 
   /**
    * Add Shelf to Search Results
@@ -52,7 +69,7 @@ const SearchBooks = ({books, onShelfChange}) => {
           value={query}
           onChange={(event) => {
             event.preventDefault();
-            onSearch(event.target.value);
+            handleChange(event.target.value);
           }}
         />
       </div>
